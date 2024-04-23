@@ -1,0 +1,80 @@
+#%RAML 1.0 DataType
+  properties:
+    applicationName:
+      description: Name of the application creating the record
+      type: string
+      required: true
+      example: example-application-papi
+    channelId: 
+      description: Identifier of channel if one is used in the process
+      type: string
+      required: false
+      example: contactEventChannel
+    correlationId:
+      description: MuleSoft correlationId used to identify requests/logs between applications and requests
+      type: string
+      required: true
+      example: 4f6cbddc-be0c-4795-8e0a-edbe542e076b
+    dataSource:
+      description: System where the data in the integration originated from
+      type: string
+      required: false
+      example: Salesforce
+    dataTarget:
+      description: System where the data in the integration was going
+      type: string
+      required: false
+      example: Salesforce
+    startTime:
+      description: Time the integration process started
+      type: datetime
+      required: true
+      example: 2024-04-18T20:32:54.444689Z
+    endTime:
+      description: Time the integration process ended
+      type: datetime
+      required: false
+      example: 2024-04-18T20:32:54.444689Z
+    message:
+      description: Message used to describe the record. Either a process state descriptor or the error.description if an error is thrown during the process
+      type: string
+      required: false
+      example: error.description
+    platform:
+      description: Platform the record was created by.
+      type: string
+      required: true
+      example: mulesoft
+    processName:
+      description: Name of the business process used in the integration
+      type: string
+      required: true
+      example: Contact compliance status
+    relatedRecordId:
+      description: Record ID of the related record outside of Salesforce. This is helpful for troubleshooting and support
+      type: string
+      required: false
+      example: "984267"
+    salesforceRecordId:
+      description: Salesforce record id for the record used in the integration
+      type: string
+      required: false
+      example: uF83g000000c5mPCAQ
+    status:
+      description: Status of the integration before record was created
+      type: string
+      required: true
+      example: started
+    type:
+      description: Type of integration
+      type: string
+      required: true
+      example: REST, Event, Schedule, Platform Event, CDC Event
+    replayId:
+      description: Replay, or Event id used for event based integration
+      type: string
+      required: false
+      example: "5256"
+  
+
+    
