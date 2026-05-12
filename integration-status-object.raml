@@ -75,6 +75,24 @@
       type: string
       required: false
       example: "5256"
-  
-
+    retryCount:
+      description: Number of times the integration process has been retried
+      type: integer
+      required: false
+      example: 3
+    retryDelay:
+      description: Delay in milliseconds between retries
+      type: integer
+      required: false
+      example: 1000
+    retryDelayUnit:
+      description: Unit of time for the retry delay
+      type: string
+      required: false
+      example: ms
+    dataUrl:
+      description: URL of the data used in the integration
+      type: string
+      required: false
+      example: https://example.com/(relatedRecordId)
     
