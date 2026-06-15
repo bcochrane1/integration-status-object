@@ -10,6 +10,35 @@ The canonical object shape is defined in:
 - `integration-status-object.openapi.yaml`
 - `salesforce/force-app/main/default/objects/Integration_Status__c/`
 
+## Sample Status Object
+
+```json
+{
+  "applicationName": "example-application-papi",
+  "channelId": "contactEventChannel",
+  "correlationId": "4f6cbddc-be0c-4795-8e0a-edbe542e076b",
+  "dataSource": "Salesforce",
+  "dataTarget": "Salesforce",
+  "startTime": "2024-04-18T20:32:54.444689Z",
+  "endTime": "2024-04-18T20:32:54.444689Z",
+  "message": "error.description",
+  "platform": "mulesoft",
+  "processName": "Contact compliance status",
+  "relatedRecordId": "984267",
+  "salesforceRecordId": "uF83g000000c5mPCAQ",
+  "status": "started",
+  "type": "REST",
+  "replayId": "5256",
+  "retryCount": 3,
+  "retryDelay": 1000,
+  "retryDelayUnit": "ms",
+  "processedCount": null,
+  "failedCount": null,
+  "skippedCount": null,
+  "dataUrl": "https://example.com/(relatedRecordId)"
+}
+```
+
 ## Salesforce Deployment
 
 This repo includes Salesforce DX source for the `Integration_Status__c` custom object.
