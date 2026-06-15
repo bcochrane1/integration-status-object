@@ -77,17 +77,6 @@ fun updateKnownFields(current: Object, updates: Object): Object =
 fun updateKnownFields(updates: Object): Object =
   updateKnownFields(vars.statusObject, updates)
 
-/**
- * Status-specific alias retained for readability and backwards compatibility.
- */
-fun updateKnownStatusFields(current: Object, updates: Object): Object =
-  updateKnownFields(current, updates)
-
-/**
- * Status-specific alias for the payload-based overload.
- */
-fun updateKnownStatusFields(updates: Object): Object =
-  updateKnownFields(updates)
 
 // ─────────────────────────────────────────────
 // STATUS CONSTANTS
