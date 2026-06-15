@@ -93,7 +93,7 @@ fun updateStatusMessage(current: Object, message: Any): Object =
  * is stored in vars.statusObject.
  */
 fun updateStatusMessage(message: Any): Object =
-  updateStatusMessage(vars.statusObject, message)
+  updateStatusMessage(vars.statusObject, toStatusMessageString(message))
 
 fun toStatusMessageString(message: Any): String =
   if (message is String)
