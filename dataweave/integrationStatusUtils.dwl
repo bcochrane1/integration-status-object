@@ -125,7 +125,7 @@ fun initializeStatusObject(sourceKey: String, targetKey: String): Object =
       relatedRecordId: null,
       salesforceRecordId: null,
       status: p("integration.status.inProgress") default "IN_PROGRESS",
-      type: vars.integrationStatusType default (p("integration.status.type") default "REST"),
+      "type": (p("integration.status.type") default "REST") default "REST",
       replayId: null,
       retryCount: 0,
       retryDelay: 0,
