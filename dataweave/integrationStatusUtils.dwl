@@ -81,19 +81,19 @@ fun updateKnownStatusFields(current: Object, updates: Object): Object =
  *   integration.status.pending:     PENDING
  */
 var STATUS_SUCCESS     = 
-  //p('integration.status.success')    default 
+  p('integration.status.success')    default 
   "SUCCESS"
 var STATUS_FAILED      = 
-  //p('integration.status.failed')     default 
+  p('integration.status.failed')     default 
   "FAILED"
 var STATUS_PARTIAL     = 
-  //p('integration.status.partial')    default 
+  p('integration.status.partial')    default 
   "PARTIAL"
 var STATUS_IN_PROGRESS = 
-  //p('integration.status.inProgress') default 
+  p('integration.status.inProgress') default 
   "IN_PROGRESS"
 var STATUS_PENDING     = 
-  //p('integration.status.pending')    default 
+  p('integration.status.pending')    default 
   "PENDING"
 
 // ─────────────────────────────────────────────
