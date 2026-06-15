@@ -1,0 +1,159 @@
+openapi: 3.0.3
+info:
+  title: Integration Status Object
+  version: 1.0.0
+  description: Canonical MuleSoft integration status object for Salesforce persistence, processing state tracking, retries, and batch progress.
+paths: {}
+components:
+  schemas:
+    IntegrationStatusObject:
+      type: object
+      additionalProperties: false
+      required:
+        - applicationName
+        - correlationId
+        - startTime
+        - platform
+        - processName
+        - status
+        - type
+      properties:
+        applicationName:
+          type: string
+          description: Name of the application creating the record.
+          example: example-application-papi
+        channelId:
+          type: string
+          nullable: true
+          description: Identifier of the channel if one is used in the process.
+          example: contactEventChannel
+        correlationId:
+          type: string
+          description: MuleSoft correlationId used to identify requests and logs across applications.
+          example: 4f6cbddc-be0c-4795-8e0a-edbe542e076b
+        dataSource:
+          type: string
+          nullable: true
+          description: System where the data in the integration originated.
+          example: Salesforce
+        dataTarget:
+          type: string
+          nullable: true
+          description: System where the data in the integration was going.
+          example: Salesforce
+        startTime:
+          type: string
+          format: date-time
+          description: Time the integration process started.
+          example: 2024-04-18T20:32:54.444689Z
+        endTime:
+          type: string
+          format: date-time
+          nullable: true
+          description: Time the integration process ended.
+          example: 2024-04-18T20:32:54.444689Z
+        message:
+          type: string
+          nullable: true
+          description: Message describing the record, either a process state descriptor or the error description.
+          example: error.description
+        platform:
+          type: string
+          description: Platform that created the record.
+          example: mulesoft
+        processName:
+          type: string
+          description: Name of the business process used in the integration.
+          example: Contact compliance status
+        relatedRecordId:
+          type: string
+          nullable: true
+          description: Record ID of the related record outside Salesforce, useful for troubleshooting and support.
+          example: "984267"
+        salesforceRecordId:
+          type: string
+          nullable: true
+          description: Salesforce record ID for the record used in the integration.
+          example: uF83g000000c5mPCAQ
+        status:
+          type: string
+          description: Status of the integration when the record was created.
+          example: started
+        type:
+          type: string
+          description: Type of integration, such as REST, Event, Schedule, Platform Event, or CDC Event.
+          example: REST
+        replayId:
+          type: string
+          nullable: true
+          description: Replay ID or event ID used for event-based integration.
+          example: "5256"
+        retryCount:
+          type: integer
+          format: int32
+          minimum: 0
+          nullable: true
+          description: Number of times the integration process has been retried.
+          example: 3
+        retryDelay:
+          type: integer
+          format: int32
+          minimum: 0
+          nullable: true
+          description: Delay between retries.
+          example: 1000
+        retryDelayUnit:
+          type: string
+          nullable: true
+          description: Unit of time for the retry delay.
+          example: ms
+        processedCount:
+          type: integer
+          format: int32
+          minimum: 0
+          nullable: true
+          description: Number of records successfully processed in a batch or multi-record integration.
+          example: 25
+        failedCount:
+          type: integer
+          format: int32
+          minimum: 0
+          nullable: true
+          description: Number of records that failed in a batch or multi-record integration.
+          example: 2
+        skippedCount:
+          type: integer
+          format: int32
+          minimum: 0
+          nullable: true
+          description: Number of records skipped in a batch or multi-record integration.
+          example: 1
+        dataUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: URL of the data used in the integration.
+          example: https://example.com/(relatedRecordId)
+      example:
+        applicationName: example-application-papi
+        channelId: contactEventChannel
+        correlationId: 4f6cbddc-be0c-4795-8e0a-edbe542e076b
+        dataSource: Salesforce
+        dataTarget: Salesforce
+        startTime: 2024-04-18T20:32:54.444689Z
+        endTime: 2024-04-18T20:32:54.444689Z
+        message: error.description
+        platform: mulesoft
+        processName: Contact compliance status
+        relatedRecordId: "984267"
+        salesforceRecordId: uF83g000000c5mPCAQ
+        status: started
+        type: REST
+        replayId: "5256"
+        retryCount: 3
+        retryDelay: 1000
+        retryDelayUnit: ms
+        processedCount: null
+        failedCount: null
+        skippedCount: null
+        dataUrl: https://example.com/(relatedRecordId)

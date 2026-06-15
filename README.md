@@ -7,7 +7,8 @@ The canonical object shape is defined in:
 - `integration-status-object.raml`
 - `integration-status-object-example.json`
 - `integration-status-object.schema.json`
-- `force-app/main/default/objects/Integration_Status__c/`
+- `integration-status-object.openapi.yaml`
+- `salesforce/force-app/main/default/objects/Integration_Status__c/`
 
 ## Salesforce Deployment
 
@@ -16,12 +17,14 @@ This repo includes Salesforce DX source for the `Integration_Status__c` custom o
 Validate without deploying:
 
 ```bash
+cd salesforce
 sf project deploy validate --manifest manifest/package.xml --target-org <alias-or-username>
 ```
 
 Deploy:
 
 ```bash
+cd salesforce
 sf project deploy start --manifest manifest/package.xml --target-org <alias-or-username>
 ```
 
