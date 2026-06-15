@@ -90,6 +90,7 @@ fun updateKnownFields(updates: Object): Object =
  *   sourceKey   - selects integration.status.sources.<key>
  *   targetKey   - selects integration.status.targets.<key>
  *   processName - business process name
+ *   channelId   - optional channel identifier
  *
  * startTime is now() formatted with integration.status.dateTimeFormat.
  */
@@ -97,13 +98,16 @@ fun initializeStatusObject(processName: String): Object =
   initializeStatusObject("default", "default", processName)
 
 fun initializeStatusObject(sourceKey: String, targetKey: String, processName: String): Object =
+  initializeStatusObject(sourceKey, targetKey, processName, "")
+
+fun initializeStatusObject(sourceKey: String, targetKey: String, processName: String, channelId: String): Object =
   do {
     var dateTimeFormat =
       p("integration.status.dateTimeFormat") default "yyyy-MM-dd'T'HH:mm:ssXXX"
     ---
     {
       applicationName: app.name,
-      channelId: "",
+      channelId: channelId,
       correlationId: correlationId,
       dataSource: p("integration.status.sources." ++ sourceKey) default "",
       dataTarget: p("integration.status.targets." ++ targetKey) default "",

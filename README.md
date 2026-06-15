@@ -67,6 +67,7 @@ The two most important functions for maintaining the status object are:
 ```dataweave
 initializeStatusObject(processName: String): Object
 initializeStatusObject(sourceKey: String, targetKey: String, processName: String): Object
+initializeStatusObject(sourceKey: String, targetKey: String, processName: String, channelId: String): Object
 updateKnownFields(current: Object, updates: Object): Object
 updateKnownFields(updates: Object): Object
 ```
@@ -92,6 +93,12 @@ initializeStatusObject(sourceKey, targetKey, processName)
 ```
 
 This keeps flow-specific source, target, and process name selection in the calling script while the utility function builds the object. The function uses `app.name`, `correlationId`, and the `integration.status.*` properties.
+
+If the flow has a channel identifier, pass it as the fourth parameter:
+
+```dataweave
+initializeStatusObject(sourceKey, targetKey, processName, vars.integrationStatusChannelId default "")
+```
 
 ### `initializeStatusObject(processName)`
 

@@ -11,6 +11,7 @@
  *   vars.integrationStatusSourceKey - selects source from integration.status.sources.*
  *   vars.integrationStatusTargetKey - selects target from integration.status.targets.*
  *   vars.processName                - business process name
+ *   vars.integrationStatusChannelId - optional channel identifier
  */
 %dw 2.0
 output application/json
@@ -26,6 +27,9 @@ var targetKey =
   vars.integrationStatusTargetKey default "default"
 var processName =
   vars.processName default app.name
+
+// Use this form when a channel ID applies:
+// initializeStatusObject(sourceKey, targetKey, processName, vars.integrationStatusChannelId default "")
 
 ---
 initializeStatusObject(sourceKey, targetKey, processName)
