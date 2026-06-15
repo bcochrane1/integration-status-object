@@ -10,9 +10,7 @@
  * Expected optional variables:
  *   vars.integrationStatusSourceKey - selects source from integration.status.sources.*
  *   vars.integrationStatusTargetKey - selects target from integration.status.targets.*
- *   vars.integrationStatusChannelId - channel identifier when applicable
- *   vars.integrationStatusType      - integration type override, defaults to property/default REST
- *   vars.processName                - business process name, defaults to app.name
+ *   vars.processName                - business process name
  */
 %dw 2.0
 output application/json
@@ -26,6 +24,8 @@ var sourceKey =
   vars.integrationStatusSourceKey default "default"
 var targetKey =
   vars.integrationStatusTargetKey default "default"
+var processName =
+  vars.processName default app.name
 
 ---
-initializeStatusObject(sourceKey, targetKey)
+initializeStatusObject(sourceKey, targetKey, processName)

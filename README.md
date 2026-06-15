@@ -65,15 +65,15 @@ Use `dataweave/integrationStatusUtils.dwl`.
 The two most important functions for maintaining the status object are:
 
 ```dataweave
-initializeStatusObject(): Object
-initializeStatusObject(sourceKey: String, targetKey: String): Object
+initializeStatusObject(processName: String): Object
+initializeStatusObject(sourceKey: String, targetKey: String, processName: String): Object
 updateKnownFields(current: Object, updates: Object): Object
 updateKnownFields(updates: Object): Object
 ```
 
-### `initializeStatusObject(sourceKey, targetKey)`
+### `initializeStatusObject(sourceKey, targetKey, processName)`
 
-Use this at the start of a flow to create the canonical status object while keeping flow-specific source/target selection in the calling script.
+Use this at the start of a flow to create the canonical status object while keeping flow-specific values in the calling script.
 
 ```dataweave
 %dw 2.0
@@ -84,24 +84,29 @@ var sourceKey =
   vars.integrationStatusSourceKey default "default"
 var targetKey =
   vars.integrationStatusTargetKey default "default"
+var processName =
+  vars.processName default app.name
 
 ---
-initializeStatusObject(sourceKey, targetKey)
+initializeStatusObject(sourceKey, targetKey, processName)
 ```
 
-This keeps flow-specific source and target selection in the calling script while the utility function builds the object. The function uses `app.name`, `correlationId`, and the `integration.status.*` properties.
+This keeps flow-specific source, target, and process name selection in the calling script while the utility function builds the object. The function uses `app.name`, `correlationId`, and the `integration.status.*` properties.
 
-### `initializeStatusObject()`
+### `initializeStatusObject(processName)`
 
-Use this when you want the utility to read `vars.integrationStatusSourceKey` and `vars.integrationStatusTargetKey` directly.
+Use this when the default source and target properties are correct.
 
 ```dataweave
 %dw 2.0
 output application/json
 import initializeStatusObject from dataweave::integrationStatusUtils
 
+var processName =
+  vars.processName default app.name
+
 ---
-initializeStatusObject()
+initializeStatusObject(processName)
 ```
 
 ### `updateKnownFields(current, updates)`

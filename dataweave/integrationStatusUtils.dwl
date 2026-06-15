@@ -86,34 +86,24 @@ fun updateKnownFields(updates: Object): Object =
  *   app.name      - applicationName
  *   correlationId - correlationId
  *
- * Uses optional Mule variables:
- *   vars.integrationStatusSourceKey - selects integration.status.sources.<key>
- *   vars.integrationStatusTargetKey - selects integration.status.targets.<key>
- *   vars.integrationStatusChannelId - channelId
- *   vars.integrationStatusType      - type override
- *   vars.processName                - processName override
+ * Caller supplies:
+ *   sourceKey   - selects integration.status.sources.<key>
+ *   targetKey   - selects integration.status.targets.<key>
+ *   processName - business process name
  *
  * startTime is now() formatted with integration.status.dateTimeFormat.
  */
-fun initializeStatusObject(): Object =
-  initializeStatusObject(
-    vars.integrationStatusSourceKey default "default",
-    vars.integrationStatusTargetKey default "default"
-  )
+fun initializeStatusObject(processName: String): Object =
+  initializeStatusObject("default", "default", processName)
 
-/**
- * Initializes a canonical integration status object with explicit source and target
- * keys. The keys resolve against integration.status.sources.* and
- * integration.status.targets.* properties.
- */
-fun initializeStatusObject(sourceKey: String, targetKey: String): Object =
+fun initializeStatusObject(sourceKey: String, targetKey: String, processName: String): Object =
   do {
     var dateTimeFormat =
       p("integration.status.dateTimeFormat") default "yyyy-MM-dd'T'HH:mm:ssXXX"
     ---
     {
       applicationName: app.name,
-      channelId: vars.integrationStatusChannelId default "",
+      channelId: "",
       correlationId: correlationId,
       dataSource: p("integration.status.sources." ++ sourceKey) default "",
       dataTarget: p("integration.status.targets." ++ targetKey) default "",
@@ -121,7 +111,7 @@ fun initializeStatusObject(sourceKey: String, targetKey: String): Object =
       endTime: null,
       message: "",
       platform: p("integration.status.platform") default "mulesoft",
-      processName: vars.processName default app.name,
+      processName: processName,
       relatedRecordId: null,
       salesforceRecordId: null,
       status: p("integration.status.inProgress") default "IN_PROGRESS",
@@ -268,7 +258,7 @@ fun buildStatus(
   relatedRecordId:    null,
   salesforceRecordId: null,
   status:         status,
-  type:              DEFAULT_TYPE,
+  "type":            DEFAULT_TYPE,
   replayId:          null,
   retryCount:        DEFAULT_RETRY_COUNT,
   retryDelay:        DEFAULT_RETRY_DELAY,
@@ -538,7 +528,7 @@ fun toAuditLog(status: Object): Object =
       startTime:     status.startTime,
       endTime:       status.endTime,
       platform:      status.platform,
-      type:          status.type,
+      "type":        status.type,
       (processedCount: status.processedCount) if status.processedCount != null,
       (failedCount:    status.failedCount)    if status.failedCount != null,
       (skippedCount:   status.skippedCount)   if status.skippedCount != null
