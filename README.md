@@ -65,8 +65,43 @@ Use `dataweave/integrationStatusUtils.dwl`.
 The two most important functions for maintaining the status object are:
 
 ```dataweave
+initializeStatusObject(): Object
+initializeStatusObject(sourceKey: String, targetKey: String): Object
 updateKnownFields(current: Object, updates: Object): Object
 updateKnownFields(updates: Object): Object
+```
+
+### `initializeStatusObject(sourceKey, targetKey)`
+
+Use this at the start of a flow to create the canonical status object while keeping flow-specific source/target selection in the calling script.
+
+```dataweave
+%dw 2.0
+output application/json
+import initializeStatusObject from dataweave::integrationStatusUtils
+
+var sourceKey =
+  vars.integrationStatusSourceKey default "default"
+var targetKey =
+  vars.integrationStatusTargetKey default "default"
+
+---
+initializeStatusObject(sourceKey, targetKey)
+```
+
+This keeps flow-specific source and target selection in the calling script while the utility function builds the object. The function uses `app.name`, `correlationId`, and the `integration.status.*` properties.
+
+### `initializeStatusObject()`
+
+Use this when you want the utility to read `vars.integrationStatusSourceKey` and `vars.integrationStatusTargetKey` directly.
+
+```dataweave
+%dw 2.0
+output application/json
+import initializeStatusObject from dataweave::integrationStatusUtils
+
+---
+initializeStatusObject()
 ```
 
 ### `updateKnownFields(current, updates)`

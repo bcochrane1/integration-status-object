@@ -78,6 +78,65 @@ fun updateKnownFields(updates: Object): Object =
   updateKnownFields(vars.statusObject, updates)
 
 
+/**
+ * Initializes a canonical integration status object using Mule context and
+ * integration.status.* properties.
+ *
+ * Uses Mule predefined variables:
+ *   app.name      - applicationName
+ *   correlationId - correlationId
+ *
+ * Uses optional Mule variables:
+ *   vars.integrationStatusSourceKey - selects integration.status.sources.<key>
+ *   vars.integrationStatusTargetKey - selects integration.status.targets.<key>
+ *   vars.integrationStatusChannelId - channelId
+ *   vars.integrationStatusType      - type override
+ *   vars.processName                - processName override
+ *
+ * startTime is now() formatted with integration.status.dateTimeFormat.
+ */
+fun initializeStatusObject(): Object =
+  initializeStatusObject(
+    vars.integrationStatusSourceKey default "default",
+    vars.integrationStatusTargetKey default "default"
+  )
+
+/**
+ * Initializes a canonical integration status object with explicit source and target
+ * keys. The keys resolve against integration.status.sources.* and
+ * integration.status.targets.* properties.
+ */
+fun initializeStatusObject(sourceKey: String, targetKey: String): Object =
+  do {
+    var dateTimeFormat =
+      p("integration.status.dateTimeFormat") default "yyyy-MM-dd'T'HH:mm:ssXXX"
+    ---
+    {
+      applicationName: app.name,
+      channelId: vars.integrationStatusChannelId default "",
+      correlationId: correlationId,
+      dataSource: p("integration.status.sources." ++ sourceKey) default "",
+      dataTarget: p("integration.status.targets." ++ targetKey) default "",
+      startTime: now() as String {format: dateTimeFormat},
+      endTime: null,
+      message: "",
+      platform: p("integration.status.platform") default "mulesoft",
+      processName: vars.processName default app.name,
+      relatedRecordId: null,
+      salesforceRecordId: null,
+      status: p("integration.status.inProgress") default "IN_PROGRESS",
+      type: vars.integrationStatusType default (p("integration.status.type") default "REST"),
+      replayId: null,
+      retryCount: 0,
+      retryDelay: 0,
+      retryDelayUnit: p("integration.status.retryDelayUnit") default "ms",
+      processedCount: 0,
+      failedCount: 0,
+      skippedCount: 0,
+      dataUrl: null
+    }
+  }
+
 // ─────────────────────────────────────────────
 // STATUS CONSTANTS
 // ─────────────────────────────────────────────
