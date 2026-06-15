@@ -18,6 +18,10 @@
 output application/json
 import initializeStatusObject from dataweave::integrationStatusUtils
 
+/**
+  * Set value for Source and Target systems
+  * Recommended to use properties
+*/
 var sourceKey =
   vars.integrationStatusSourceKey default "default"
 var targetKey =
