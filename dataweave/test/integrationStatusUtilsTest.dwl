@@ -96,6 +96,10 @@ var expectedResult = {
   updateStatusMessage_object:
     write({ code: "HTTP:TIMEOUT", detail: "timeout" }, "application/json"),
 
+  updateStatus_generic: "SUCCESS",
+
+  updateStatusFailed_named: "FAILED",
+
   buildStatus_basic: {
     applicationName: "example-application-papi",
     channelId: null,
@@ -217,6 +221,15 @@ var actualResult = {
   updateStatusMessage_object:
     updateStatusMessage(statusObject, { code: "HTTP:TIMEOUT", detail: "timeout" }),
 
+  updateEndTime_basic:
+    updateEndTime(statusObject),
+
+  updateStatus_generic:
+    updateStatus(statusObject, "SUCCESS"),
+
+  updateStatusFailed_named:
+    updateStatusFailed(statusObject),
+
   buildStatus_basic:
     buildStatus("corr-001","SUCCESS","process-order-flow","Order processed successfully.",10,0,1,null),
 
@@ -288,6 +301,15 @@ fun validate() =
 
     updateStatusMessage_object_valid:
       actualResult.updateStatusMessage_object.message == expectedResult.updateStatusMessage_object,
+
+    updateEndTime_basic_valid:
+      actualResult.updateEndTime_basic.endTime is DateTime,
+
+    updateStatus_generic_valid:
+      actualResult.updateStatus_generic.status == expectedResult.updateStatus_generic,
+
+    updateStatusFailed_named_valid:
+      actualResult.updateStatusFailed_named.status == expectedResult.updateStatusFailed_named,
 
     buildStatus_basic_valid:
       actualResult.buildStatus_basic.correlationId == expectedResult.buildStatus_basic.correlationId and

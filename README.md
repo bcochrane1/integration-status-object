@@ -72,6 +72,20 @@ updateKnownFields(current: Object, updates: Object): Object
 updateKnownFields(updates: Object): Object
 updateStatusMessage(current: Object, message: Any): Object
 updateStatusMessage(message: Any): Object
+updateEndTime(current: Object): Object
+updateEndTime(): Object
+updateStatus(current: Object, status: String): Object
+updateStatus(status: String): Object
+updateStatusSuccess(current: Object): Object
+updateStatusSuccess(): Object
+updateStatusFailed(current: Object): Object
+updateStatusFailed(): Object
+updateStatusPartial(current: Object): Object
+updateStatusPartial(): Object
+updateStatusInProgress(current: Object): Object
+updateStatusInProgress(): Object
+updateStatusPending(current: Object): Object
+updateStatusPending(): Object
 ```
 
 ### `initializeStatusObject(sourceKey, targetKey, processName)`
@@ -169,6 +183,54 @@ Explicit current-object form:
 
 ```dataweave
 updateStatusMessage(vars.statusObject, { code: error.errorType as String, detail: error.description })
+```
+
+### `updateEndTime()`
+
+Use this when the current object is already stored in `vars.statusObject` and the flow is ending. It updates only `endTime` using `now()`.
+
+```dataweave
+%dw 2.0
+output application/json
+import updateEndTime from dataweave::integrationStatusUtils
+
+---
+updateEndTime()
+```
+
+Explicit current-object form:
+
+```dataweave
+updateEndTime(vars.statusObject)
+```
+
+### `updateStatus<status>()`
+
+Use the named helpers when setting a standard status value. Each helper updates only `status` and reuses `updateKnownFields`.
+
+```dataweave
+%dw 2.0
+output application/json
+import updateStatusSuccess from dataweave::integrationStatusUtils
+
+---
+updateStatusSuccess()
+```
+
+Available helpers:
+
+```dataweave
+updateStatusSuccess()
+updateStatusFailed()
+updateStatusPartial()
+updateStatusInProgress()
+updateStatusPending()
+```
+
+Use the generic form when the status value is already calculated:
+
+```dataweave
+updateStatus(vars.statusObject, payload.status)
 ```
 
 ## Reusable Example

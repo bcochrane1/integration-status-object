@@ -103,6 +103,32 @@ fun toStatusMessageString(message: Any): String =
   else
     message as String
 
+/**
+ * Updates endTime with now().
+ */
+fun updateEndTime(current: Object): Object =
+  updateKnownFields(current, { endTime: now() })
+
+/**
+ * Convenience overload for Mule flows where the current integration status object
+ * is stored in vars.statusObject.
+ */
+fun updateEndTime(): Object =
+  updateEndTime(vars.statusObject)
+
+/**
+ * Updates only the status field on the current integration status object.
+ */
+fun updateStatus(current: Object, status: String): Object =
+  updateKnownFields(current, { status: status })
+
+/**
+ * Convenience overload for Mule flows where the current integration status object
+ * is stored in vars.statusObject.
+ */
+fun updateStatus(status: String): Object =
+  updateStatus(vars.statusObject, status)
+
 
 /**
  * Initializes a canonical integration status object using Mule context and
@@ -221,6 +247,40 @@ var DEFAULT_RETRY_DELAY =
 var DEFAULT_RETRY_DELAY_UNIT =
   p('integration.status.retryDelayUnit') default
   "ms"
+
+// ─────────────────────────────────────────────
+// STATUS UPDATE HELPERS
+// ─────────────────────────────────────────────
+
+fun updateStatusSuccess(current: Object): Object =
+  updateStatus(current, STATUS_SUCCESS)
+
+fun updateStatusSuccess(): Object =
+  updateStatusSuccess(vars.statusObject)
+
+fun updateStatusFailed(current: Object): Object =
+  updateStatus(current, STATUS_FAILED)
+
+fun updateStatusFailed(): Object =
+  updateStatusFailed(vars.statusObject)
+
+fun updateStatusPartial(current: Object): Object =
+  updateStatus(current, STATUS_PARTIAL)
+
+fun updateStatusPartial(): Object =
+  updateStatusPartial(vars.statusObject)
+
+fun updateStatusInProgress(current: Object): Object =
+  updateStatus(current, STATUS_IN_PROGRESS)
+
+fun updateStatusInProgress(): Object =
+  updateStatusInProgress(vars.statusObject)
+
+fun updateStatusPending(current: Object): Object =
+  updateStatus(current, STATUS_PENDING)
+
+fun updateStatusPending(): Object =
+  updateStatusPending(vars.statusObject)
 
 // ─────────────────────────────────────────────
 // CORE BUILDERS
