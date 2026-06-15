@@ -73,7 +73,9 @@ updateKnownFields(updates: Object): Object
 updateStatusMessage(current: Object, message: Any): Object
 updateStatusMessage(message: Any): Object
 updateEndTime(current: Object): Object
+updateEndTime(current: Object, dateTimeFormat: String): Object
 updateEndTime(): Object
+updateEndTime(dateTimeFormat: String): Object
 updateStatus(current: Object, status: String): Object
 updateStatus(status: String): Object
 updateStatusSuccess(current: Object): Object
@@ -187,7 +189,7 @@ updateStatusMessage(vars.statusObject, { code: error.errorType as String, detail
 
 ### `updateEndTime()`
 
-Use this when the current object is already stored in `vars.statusObject` and the flow is ending. It updates only `endTime` using `now()`.
+Use this when the current object is already stored in `vars.statusObject` and the flow is ending. It updates only `endTime` using `now()` formatted with `integration.status.dateTimeFormat`, defaulting to `yyyy-MM-dd'T'HH:mm:ssXXX`.
 
 ```dataweave
 %dw 2.0
@@ -202,6 +204,12 @@ Explicit current-object form:
 
 ```dataweave
 updateEndTime(vars.statusObject)
+```
+
+Explicit format override:
+
+```dataweave
+updateEndTime(vars.statusObject, "yyyy-MM-dd'T'HH:mm:ssXXX")
 ```
 
 ### `updateStatus<status>()`

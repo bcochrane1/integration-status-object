@@ -104,10 +104,19 @@ fun toStatusMessageString(message: Any): String =
     message as String
 
 /**
- * Updates endTime with now().
+ * Updates endTime with now() formatted using integration.status.dateTimeFormat.
  */
 fun updateEndTime(current: Object): Object =
-  updateKnownFields(current, { endTime: now() })
+  updateEndTime(
+    current,
+    p("integration.status.dateTimeFormat") default "yyyy-MM-dd'T'HH:mm:ssXXX"
+  )
+
+/**
+ * Updates endTime with now() formatted using the supplied dateTimeFormat.
+ */
+fun updateEndTime(current: Object, dateTimeFormat: String): Object =
+  updateKnownFields(current, { endTime: now() as String {format: dateTimeFormat} })
 
 /**
  * Convenience overload for Mule flows where the current integration status object
@@ -115,6 +124,13 @@ fun updateEndTime(current: Object): Object =
  */
 fun updateEndTime(): Object =
   updateEndTime(vars.statusObject)
+
+/**
+ * Convenience overload for Mule flows where the current integration status object
+ * is stored in vars.statusObject and the caller supplies the dateTimeFormat.
+ */
+fun updateEndTime(dateTimeFormat: String): Object =
+  updateEndTime(vars.statusObject, dateTimeFormat)
 
 /**
  * Updates only the status field on the current integration status object.

@@ -100,6 +100,8 @@ var expectedResult = {
 
   updateStatusFailed_named: "FAILED",
 
+  updateEndTime_customFormatLength: 10,
+
   buildStatus_basic: {
     applicationName: "example-application-papi",
     channelId: null,
@@ -224,6 +226,9 @@ var actualResult = {
   updateEndTime_basic:
     updateEndTime(statusObject),
 
+  updateEndTime_customFormat:
+    updateEndTime(statusObject, "yyyy-MM-dd"),
+
   updateStatus_generic:
     updateStatus(statusObject, "SUCCESS"),
 
@@ -303,7 +308,10 @@ fun validate() =
       actualResult.updateStatusMessage_object.message == expectedResult.updateStatusMessage_object,
 
     updateEndTime_basic_valid:
-      actualResult.updateEndTime_basic.endTime is DateTime,
+      actualResult.updateEndTime_basic.endTime is String,
+
+    updateEndTime_customFormat_valid:
+      sizeOf(actualResult.updateEndTime_customFormat.endTime) == expectedResult.updateEndTime_customFormatLength,
 
     updateStatus_generic_valid:
       actualResult.updateStatus_generic.status == expectedResult.updateStatus_generic,
