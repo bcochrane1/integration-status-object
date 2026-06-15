@@ -44,10 +44,10 @@ import mergeWith from dw::core::Objects
  *   https://github.com/bcochrane1/integration-status-object/blob/main/integration-status-object-example.json
  *
  * Example:
- *   updateKnownStatusFields(statusObject, { status: "failed", retryCount: 4 })
+ *   updateKnownFields(statusObject, { status: "failed", retryCount: 4 })
  *   → returns statusObject with only status and retryCount replaced.
  */
-fun updateKnownStatusFields(current: Object, updates: Object): Object =
+fun updateKnownFields(current: Object, updates: Object): Object =
   current mapObject ((currentValue, currentKey) ->
     {
       (currentKey): if (keysOf(updates) contains currentKey)
@@ -56,6 +56,38 @@ fun updateKnownStatusFields(current: Object, updates: Object): Object =
         currentValue
     }
   )
+
+/**
+ * Convenience overload for Mule flows where the current integration status object
+ * is stored in vars.statusObject.
+ *
+ * Use this when vars.statusObject contains the canonical status object and the
+ * argument is a partial update object. This keeps the call site short:
+ *
+ *   updateKnownFields({ status: "completed", endTime: now() })
+ *
+ * Equivalent to:
+ *
+ *   updateKnownFields(vars.statusObject, { status: "completed", endTime: now() })
+ *
+ * Do not use this overload unless vars.statusObject has already been set. If the
+ * current status object is stored somewhere else, call updateKnownFields(current, updates)
+ * explicitly.
+ */
+fun updateKnownFields(updates: Object): Object =
+  updateKnownFields(vars.statusObject, updates)
+
+/**
+ * Status-specific alias retained for readability and backwards compatibility.
+ */
+fun updateKnownStatusFields(current: Object, updates: Object): Object =
+  updateKnownFields(current, updates)
+
+/**
+ * Status-specific alias for the payload-based overload.
+ */
+fun updateKnownStatusFields(updates: Object): Object =
+  updateKnownFields(updates)
 
 // ─────────────────────────────────────────────
 // STATUS CONSTANTS
