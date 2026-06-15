@@ -117,6 +117,34 @@ var STATUS_PENDING     =
   p('integration.status.pending')    default 
   "PENDING"
 
+var DEFAULT_APPLICATION_NAME =
+  p('integration.status.applicationName') default
+  "example-application-papi"
+var DEFAULT_CHANNEL_ID =
+  p('integration.status.channelId') default
+  null
+var DEFAULT_DATA_SOURCE =
+  p('integration.status.dataSource') default
+  null
+var DEFAULT_DATA_TARGET =
+  p('integration.status.dataTarget') default
+  null
+var DEFAULT_PLATFORM =
+  p('integration.status.platform') default
+  "mulesoft"
+var DEFAULT_TYPE =
+  p('integration.status.type') default
+  "REST"
+var DEFAULT_RETRY_COUNT =
+  (p('integration.status.retryCount') default 0) as Number
+var DEFAULT_RETRY_DELAY_VALUE =
+  p('integration.status.retryDelay') default null
+var DEFAULT_RETRY_DELAY =
+  if (DEFAULT_RETRY_DELAY_VALUE == null) null else DEFAULT_RETRY_DELAY_VALUE as Number
+var DEFAULT_RETRY_DELAY_UNIT =
+  p('integration.status.retryDelayUnit') default
+  "ms"
+
 // ─────────────────────────────────────────────
 // CORE BUILDERS
 // ─────────────────────────────────────────────
@@ -134,19 +162,30 @@ var STATUS_PENDING     =
  * @param skippedCount    - Number of records skipped (null if not applicable)
  * @param error           - Error sub-object built with buildStatusError(), or null
  *
- * Output:
+ * Output matches the canonical integration status object:
  * {
+ *   "applicationName": "example-application-papi",
+ *   "channelId": null,
  *   "correlationId": "abc-123",
- *   "status": "SUCCESS",
- *   "flowName": "process-order-flow",
+ *   "dataSource": null,
+ *   "dataTarget": null,
+ *   "startTime": "2026-04-08T14:32:00Z",
+ *   "endTime": null,
  *   "message": "Order processed successfully.",
- *   "startedAt": "2026-04-08T14:32:00Z",
- *   "completedAt": null,
- *   "durationMs": null,
+ *   "platform": "mulesoft",
+ *   "processName": "process-order-flow",
+ *   "relatedRecordId": null,
+ *   "salesforceRecordId": null,
+ *   "status": "SUCCESS",
+ *   "type": "REST",
+ *   "replayId": null,
+ *   "retryCount": 0,
+ *   "retryDelay": null,
+ *   "retryDelayUnit": "ms",
  *   "processedCount": null,
  *   "failedCount": null,
  *   "skippedCount": null,
- *   "error": null
+ *   "dataUrl": null
  * }
  */
 fun buildStatus(
@@ -159,17 +198,28 @@ fun buildStatus(
   skippedCount:   Number | Null,
   error:          Object | Null
 ): Object = {
+  applicationName:    DEFAULT_APPLICATION_NAME,
+  channelId:          DEFAULT_CHANNEL_ID,
   correlationId:  correlationId,
+  dataSource:         DEFAULT_DATA_SOURCE,
+  dataTarget:         DEFAULT_DATA_TARGET,
+  startTime:          now(),
+  endTime:            null,
+  message:            message,
+  platform:           DEFAULT_PLATFORM,
+  processName:        flowName,
+  relatedRecordId:    null,
+  salesforceRecordId: null,
   status:         status,
-  flowName:       flowName,
-  message:        message,
-  startedAt:      now(),
-  completedAt:    null,
-  durationMs:     null,
-  processedCount: processedCount,
-  failedCount:    failedCount,
-  skippedCount:   skippedCount,
-  error:          error
+  type:              DEFAULT_TYPE,
+  replayId:          null,
+  retryCount:        DEFAULT_RETRY_COUNT,
+  retryDelay:        DEFAULT_RETRY_DELAY,
+  retryDelayUnit:    DEFAULT_RETRY_DELAY_UNIT,
+  processedCount:    processedCount,
+  failedCount:       failedCount,
+  skippedCount:      skippedCount,
+  dataUrl:           null
 }
 
 /**
@@ -304,18 +354,17 @@ fun aggregateBatchCounts(statuses: Array<Object>): Object = {
 fun startTimer(): DateTime = now()
 
 /**
- * Adds completedAt and durationMs to an existing status object.
+ * Adds endTime to an existing status object.
  * Call this just before returning or publishing the final status.
  *
  * @param status    - A status object built by any builder in this module
  * @param startTime - The DateTime captured by startTimer() at flow entry
  *
- * Output: the same status object with completedAt (ISO 8601 string) and durationMs (Number) set
+ * Output: the same status object with endTime set.
  */
 fun withDuration(status: Object, startTime: DateTime): Object =
   status mergeWith {
-    completedAt: now(),
-    durationMs:  "100"//diffInSeconds(startTime, now()) * 1000
+    endTime: now()
   }
 
 // ─────────────────────────────────────────────
@@ -395,20 +444,25 @@ fun isTerminal(status: Object): Boolean =
 /**
  * Converts a status object to a flat structured log record.
  * Designed to be passed directly to a Logger component or written to an audit store.
- * Omits null count fields so batch-irrelevant statuses stay clean.
+ * Uses the canonical integration status object field names.
  *
  * @param status - A status object produced by any builder in this module
  *
  * Output:
  * {
  *   "level": "INFO",
+ *   "applicationName": "example-application-papi",
  *   "correlationId": "abc-123",
  *   "status": "SUCCESS",
- *   "flowName": "process-order-flow",
+ *   "processName": "process-order-flow",
  *   "message": "Order processed successfully.",
- *   "startedAt": "2026-04-08T14:32:00Z",
- *   "completedAt": "2026-04-08T14:32:02Z",
- *   "durationMs": 2000
+ *   "startTime": "2026-04-08T14:32:00Z",
+ *   "endTime": "2026-04-08T14:32:02Z",
+ *   "platform": "mulesoft",
+ *   "type": "REST",
+ *   "processedCount": 25,
+ *   "failedCount": 2,
+ *   "skippedCount": 1
  * }
  */
 fun toAuditLog(status: Object): Object =
@@ -416,25 +470,20 @@ fun toAuditLog(status: Object): Object =
     var level = if (isFailed(status)) "ERROR"
                 else if (isPartial(status)) "WARN"
                 else "INFO"
-    var base = {
+    ---
+    {
       level:         level,
+      applicationName: status.applicationName,
       correlationId: status.correlationId,
       status:        status.status,
-      flowName:      status.flowName,
+      processName:   status.processName,
       message:       status.message,
-      startedAt:     status.startedAt,
-      completedAt:   status.completedAt,
-      durationMs:    status.durationMs
-    }
-    var counts = {
+      startTime:     status.startTime,
+      endTime:       status.endTime,
+      platform:      status.platform,
+      type:          status.type,
       (processedCount: status.processedCount) if status.processedCount != null,
-      (failedCount:    status.failedCount)    if status.failedCount    != null,
-      (skippedCount:   status.skippedCount)   if status.skippedCount   != null
+      (failedCount:    status.failedCount)    if status.failedCount != null,
+      (skippedCount:   status.skippedCount)   if status.skippedCount != null
     }
-    var errorFields = {
-      (errorCode:   status.error.code)   if status.error != null,
-      (errorDetail: status.error.detail) if status.error != null and status.error.detail != null
-    }
-    ---
-    base ++ counts ++ errorFields
   }

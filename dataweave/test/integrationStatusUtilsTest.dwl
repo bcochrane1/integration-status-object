@@ -16,7 +16,7 @@ import * from dataweave::integrationStatusUtils
  */
 
 var expectedResult = {
-  updateKnownStatusFields_singleField: {
+  updateKnownFields_singleField: {
     applicationName: "example-application-papi",
     channelId: "contactEventChannel",
     correlationId: "4f6cbddc-be0c-4795-8e0a-edbe542e076b",
@@ -35,10 +35,13 @@ var expectedResult = {
     retryCount: 3,
     retryDelay: 1000,
     retryDelayUnit: "ms",
+    processedCount: null,
+    failedCount: null,
+    skippedCount: null,
     dataUrl: "https://example.com/(relatedRecordId)"
   },
 
-  updateKnownStatusFields_multipleFields: {
+  updateKnownFields_multipleFields: {
     applicationName: "example-application-papi",
     channelId: "contactEventChannel",
     correlationId: "4f6cbddc-be0c-4795-8e0a-edbe542e076b",
@@ -57,10 +60,13 @@ var expectedResult = {
     retryCount: 4,
     retryDelay: 1000,
     retryDelayUnit: "ms",
+    processedCount: null,
+    failedCount: null,
+    skippedCount: null,
     dataUrl: "https://example.com/(relatedRecordId)"
   },
 
-  updateKnownStatusFields_ignoresUnknownKeys: {
+  updateKnownFields_ignoresUnknownKeys: {
     applicationName: "example-application-papi",
     channelId: "contactEventChannel",
     correlationId: "4f6cbddc-be0c-4795-8e0a-edbe542e076b",
@@ -79,21 +85,35 @@ var expectedResult = {
     retryCount: 3,
     retryDelay: 1000,
     retryDelayUnit: "ms",
+    processedCount: null,
+    failedCount: null,
+    skippedCount: null,
     dataUrl: "https://example.com/(relatedRecordId)"
   },
 
   buildStatus_basic: {
+    applicationName: "example-application-papi",
+    channelId: null,
     correlationId: "corr-001",
-    status: "SUCCESS",
-    flowName: "process-order-flow",
+    dataSource: null,
+    dataTarget: null,
+    startTime: "DateTime",
+    endTime: null,
     message: "Order processed successfully.",
-    startedAt: "DateTime",
-    completedAt: null,
-    durationMs: null,
+    platform: "mulesoft",
+    processName: "process-order-flow",
+    relatedRecordId: null,
+    salesforceRecordId: null,
+    status: "SUCCESS",
+    type: "REST",
+    replayId: null,
+    retryCount: 0,
+    retryDelay: null,
+    retryDelayUnit: "ms",
     processedCount: 10,
     failedCount: 0,
     skippedCount: 1,
-    error: null
+    dataUrl: null
   },
 
   buildSuccessStatus_basic: {
@@ -109,20 +129,26 @@ var expectedResult = {
 
   buildBatchStatus_success: {
     status: "SUCCESS",
+    message: "Processed: 5, Failed: 0, Skipped: 1.",
     processedCount: 5,
-    failedCount: 0
+    failedCount: 0,
+    skippedCount: 1
   },
 
   buildBatchStatus_failed: {
     status: "FAILED",
+    message: "Processed: 0, Failed: 4, Skipped: 0.",
     processedCount: 0,
-    failedCount: 4
+    failedCount: 4,
+    skippedCount: 0
   },
 
   buildBatchStatus_partial: {
     status: "PARTIAL",
+    message: "Processed: 7, Failed: 2, Skipped: 1.",
     processedCount: 7,
-    failedCount: 2
+    failedCount: 2,
+    skippedCount: 1
   },
 
   aggregateBatchCounts_basic: {
@@ -164,18 +190,21 @@ var statusObject = {
   retryCount: 3,
   retryDelay: 1000,
   retryDelayUnit: "ms",
+  processedCount: null,
+  failedCount: null,
+  skippedCount: null,
   dataUrl: "https://example.com/(relatedRecordId)"
 }
 
 var actualResult = {
-  updateKnownStatusFields_singleField:
-    updateKnownStatusFields(statusObject, { status: "failed" }),
+  updateKnownFields_singleField:
+    updateKnownFields(statusObject, { status: "failed" }),
 
-  updateKnownStatusFields_multipleFields:
-    updateKnownStatusFields(statusObject, { retryCount: 4, message: "completed", status: "completed" }),
+  updateKnownFields_multipleFields:
+    updateKnownFields(statusObject, { retryCount: 4, message: "completed", status: "completed" }),
 
-  updateKnownStatusFields_ignoresUnknownKeys:
-    updateKnownStatusFields(statusObject, { ignoredField: "do not include", unknownCount: 99 }),
+  updateKnownFields_ignoresUnknownKeys:
+    updateKnownFields(statusObject, { ignoredField: "do not include", unknownCount: 99 }),
 
   buildStatus_basic:
     buildStatus("corr-001","SUCCESS","process-order-flow","Order processed successfully.",10,0,1,null),
@@ -197,8 +226,8 @@ var actualResult = {
 
   aggregateBatchCounts_basic:
     aggregateBatchCounts([
-      buildBatchStatus("a","f",5,1,0),
-      buildBatchStatus("b","f",7,5,2)
+      { processedCount: 5, failedCount: 1, skippedCount: 0 },
+      { processedCount: 7, failedCount: 5, skippedCount: 2 }
     ]),
 
   isSuccess_true:
@@ -232,25 +261,28 @@ var actualResult = {
  */
 fun validate() =
   {
-    updateKnownStatusFields_singleField_valid:
-      actualResult.updateKnownStatusFields_singleField == expectedResult.updateKnownStatusFields_singleField,
+    updateKnownFields_singleField_valid:
+      actualResult.updateKnownFields_singleField == expectedResult.updateKnownFields_singleField,
 
-    updateKnownStatusFields_multipleFields_valid:
-      actualResult.updateKnownStatusFields_multipleFields == expectedResult.updateKnownStatusFields_multipleFields,
+    updateKnownFields_multipleFields_valid:
+      actualResult.updateKnownFields_multipleFields == expectedResult.updateKnownFields_multipleFields,
 
-    updateKnownStatusFields_ignoresUnknownKeys_valid:
-      actualResult.updateKnownStatusFields_ignoresUnknownKeys == expectedResult.updateKnownStatusFields_ignoresUnknownKeys and
-      !(keysOf(actualResult.updateKnownStatusFields_ignoresUnknownKeys) contains "ignoredField") and
-      !(keysOf(actualResult.updateKnownStatusFields_ignoresUnknownKeys) contains "unknownCount"),
+    updateKnownFields_ignoresUnknownKeys_valid:
+      actualResult.updateKnownFields_ignoresUnknownKeys == expectedResult.updateKnownFields_ignoresUnknownKeys and
+      !(keysOf(actualResult.updateKnownFields_ignoresUnknownKeys) contains "ignoredField") and
+      !(keysOf(actualResult.updateKnownFields_ignoresUnknownKeys) contains "unknownCount"),
 
     buildStatus_basic_valid:
       actualResult.buildStatus_basic.correlationId == expectedResult.buildStatus_basic.correlationId and
       actualResult.buildStatus_basic.status == expectedResult.buildStatus_basic.status and
-      (actualResult.buildStatus_basic.startedAt is DateTime),
+      actualResult.buildStatus_basic.processName == expectedResult.buildStatus_basic.processName and
+      actualResult.buildStatus_basic.platform == expectedResult.buildStatus_basic.platform and
+      (actualResult.buildStatus_basic.startTime is DateTime),
 
     buildBatchStatus_success_valid:
       actualResult.buildBatchStatus_success.status == expectedResult.buildBatchStatus_success.status and
-      actualResult.buildBatchStatus_success.processedCount == 5,
+      actualResult.buildBatchStatus_success.message == expectedResult.buildBatchStatus_success.message and
+      actualResult.buildBatchStatus_success.processedCount == expectedResult.buildBatchStatus_success.processedCount,
 
     aggregate_valid:
       actualResult.aggregateBatchCounts_basic.processedCount == 12,

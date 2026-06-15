@@ -17,5 +17,8 @@
     "retryCount": 3,
     "retryDelay": 1000,
     "retryDelayUnit": "ms",
+    "processedCount": null,
+    "failedCount": null,
+    "skippedCount": null,
     "dataUrl": "https://example.com/(relatedRecordId)"
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Integration_Status__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Integration_Status__c.Application_Name__c</members>
+        <members>Integration_Status__c.Channel_Id__c</members>
+        <members>Integration_Status__c.Correlation_Id__c</members>
+        <members>Integration_Status__c.Data_Source__c</members>
+        <members>Integration_Status__c.Data_Target__c</members>
+        <members>Integration_Status__c.Start_Time__c</members>
+        <members>Integration_Status__c.End_Time__c</members>
+        <members>Integration_Status__c.Message__c</members>
+        <members>Integration_Status__c.Platform__c</members>
+        <members>Integration_Status__c.Process_Name__c</members>
+        <members>Integration_Status__c.Related_Record_Id__c</members>
+        <members>Integration_Status__c.Salesforce_Record_Id__c</members>
+        <members>Integration_Status__c.Status__c</members>
+        <members>Integration_Status__c.Type__c</members>
+        <members>Integration_Status__c.Replay_Id__c</members>
+        <members>Integration_Status__c.Retry_Count__c</members>
+        <members>Integration_Status__c.Retry_Delay__c</members>
+        <members>Integration_Status__c.Retry_Delay_Unit__c</members>
+        <members>Integration_Status__c.Processed_Count__c</members>
+        <members>Integration_Status__c.Failed_Count__c</members>
+        <members>Integration_Status__c.Skipped_Count__c</members>
+        <members>Integration_Status__c.Data_Url__c</members>
+        <name>CustomField</name>
+    </types>
+    <version>61.0</version>
+</Package>

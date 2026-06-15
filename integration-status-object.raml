@@ -90,6 +90,21 @@
       type: string
       required: false
       example: ms
+    processedCount:
+      description: Number of records successfully processed in a batch or multi-record integration
+      type: integer
+      required: false
+      example: 25
+    failedCount:
+      description: Number of records that failed in a batch or multi-record integration
+      type: integer
+      required: false
+      example: 2
+    skippedCount:
+      description: Number of records skipped in a batch or multi-record integration
+      type: integer
+      required: false
+      example: 1
     dataUrl:
       description: URL of the data used in the integration
       type: string
