@@ -135,10 +135,8 @@ var DEFAULT_PLATFORM =
 var DEFAULT_TYPE =
   p('integration.status.type') default
   "REST"
-var DEFAULT_RETRY_COUNT =
-  (p('integration.status.retryCount') default 0) as Number
-var DEFAULT_RETRY_DELAY_VALUE =
-  p('integration.status.retryDelay') default null
+var DEFAULT_RETRY_COUNT = 0 as Number
+var DEFAULT_RETRY_DELAY_VALUE = null
 var DEFAULT_RETRY_DELAY =
   if (DEFAULT_RETRY_DELAY_VALUE == null) null else DEFAULT_RETRY_DELAY_VALUE as Number
 var DEFAULT_RETRY_DELAY_UNIT =
