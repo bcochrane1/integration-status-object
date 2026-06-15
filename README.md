@@ -6,6 +6,7 @@ The canonical object shape is defined in:
 
 - `integration-status-object.raml`
 - `integration-status-object-example.json`
+- `integration-status-object.schema.json`
 - `force-app/main/default/objects/Integration_Status__c/`
 
 ## Salesforce Deployment

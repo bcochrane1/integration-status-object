@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/bcochrane1/integration-status-object/blob/main/integration-status-object.schema.json",
+  "title": "Integration Status Object",
+  "description": "Canonical MuleSoft integration status object for Salesforce persistence, processing state tracking, retries, and batch progress.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "applicationName",
+    "correlationId",
+    "startTime",
+    "platform",
+    "processName",
+    "status",
+    "type"
+  ],
+  "properties": {
+    "applicationName": {
+      "type": "string",
+      "description": "Name of the application creating the record.",
+      "examples": [
+        "example-application-papi"
+      ]
+    },
+    "channelId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Identifier of the channel if one is used in the process.",
+      "examples": [
+        "contactEventChannel"
+      ]
+    },
+    "correlationId": {
+      "type": "string",
+      "description": "MuleSoft correlationId used to identify requests and logs across applications.",
+      "examples": [
+        "4f6cbddc-be0c-4795-8e0a-edbe542e076b"
+      ]
+    },
+    "dataSource": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "System where the data in the integration originated.",
+      "examples": [
+        "Salesforce"
+      ]
+    },
+    "dataTarget": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "System where the data in the integration was going.",
+      "examples": [
+        "Salesforce"
+      ]
+    },
+    "startTime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Time the integration process started.",
+      "examples": [
+        "2024-04-18T20:32:54.444689Z"
+      ]
+    },
+    "endTime": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "Time the integration process ended.",
+      "examples": [
+        "2024-04-18T20:32:54.444689Z"
+      ]
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Message describing the record, either a process state descriptor or the error description.",
+      "examples": [
+        "error.description"
+      ]
+    },
+    "platform": {
+      "type": "string",
+      "description": "Platform that created the record.",
+      "examples": [
+        "mulesoft"
+      ]
+    },
+    "processName": {
+      "type": "string",
+      "description": "Name of the business process used in the integration.",
+      "examples": [
+        "Contact compliance status"
+      ]
+    },
+    "relatedRecordId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Record ID of the related record outside Salesforce, useful for troubleshooting and support.",
+      "examples": [
+        "984267"
+      ]
+    },
+    "salesforceRecordId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Salesforce record ID for the record used in the integration.",
+      "examples": [
+        "uF83g000000c5mPCAQ"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "description": "Status of the integration when the record was created.",
+      "examples": [
+        "started"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "description": "Type of integration, such as REST, Event, Schedule, Platform Event, or CDC Event.",
+      "examples": [
+        "REST"
+      ]
+    },
+    "replayId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Replay ID or event ID used for event-based integration.",
+      "examples": [
+        "5256"
+      ]
+    },
+    "retryCount": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Number of times the integration process has been retried.",
+      "examples": [
+        3
+      ]
+    },
+    "retryDelay": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Delay between retries.",
+      "examples": [
+        1000
+      ]
+    },
+    "retryDelayUnit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Unit of time for the retry delay.",
+      "examples": [
+        "ms"
+      ]
+    },
+    "processedCount": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Number of records successfully processed in a batch or multi-record integration.",
+      "examples": [
+        25
+      ]
+    },
+    "failedCount": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Number of records that failed in a batch or multi-record integration.",
+      "examples": [
+        2
+      ]
+    },
+    "skippedCount": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Number of records skipped in a batch or multi-record integration.",
+      "examples": [
+        1
+      ]
+    },
+    "dataUrl": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "URL of the data used in the integration.",
+      "examples": [
+        "https://example.com/(relatedRecordId)"
+      ]
+    }
+  }
+}
