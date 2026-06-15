@@ -40,15 +40,22 @@ integration:
     partial: PARTIAL
     inProgress: IN_PROGRESS
     pending: PENDING
-    applicationName: example-application-papi
-    channelId: contactEventChannel
-    dataSource: Salesforce
-    dataTarget: Salesforce
+    dateTimeFormat: "yyyy-MM-dd'T'HH:mm:ssXXX"
     platform: mulesoft
     type: REST
     retryCount: 0
     retryDelay: 1000
     retryDelayUnit: ms
+    sources:
+      default: Salesforce
+      salesforce: Salesforce
+      database: Database
+      platformEvent: Salesforce Platform Event
+    targets:
+      default: Salesforce
+      salesforce: Salesforce
+      database: Database
+      objectStore: Object Store
 ```
 
 ## DataWeave Utilities
@@ -98,13 +105,21 @@ updateKnownFields(vars.statusObject, payload default {})
 
 ## Reusable Example
 
-Copy or adapt:
+Copy or adapt these examples:
 
 ```text
+dataweave/examples/initializeIntegrationStatusExample.dwl
 dataweave/examples/updateIntegrationStatusExample.dwl
 ```
 
-The example shows the main update forms:
+The initialize example creates a new canonical status object using Mule predefined variables:
+
+- `app.name` for `applicationName`
+- `correlationId` for `correlationId`
+- `now()` formatted with `integration.status.dateTimeFormat` for `startTime`
+- `integration.status.sources.<key>` and `integration.status.targets.<key>` for per-flow source/target values
+
+The update example shows the main update forms:
 
 - `updateKnownFields(payload default {})`
 - `updateKnownFields(vars.statusObject, payload default {})`
