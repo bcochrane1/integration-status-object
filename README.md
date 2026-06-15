@@ -70,6 +70,8 @@ initializeStatusObject(sourceKey: String, targetKey: String, processName: String
 initializeStatusObject(sourceKey: String, targetKey: String, processName: String, channelId: String): Object
 updateKnownFields(current: Object, updates: Object): Object
 updateKnownFields(updates: Object): Object
+updateStatusMessage(current: Object, message: Any): Object
+updateStatusMessage(message: Any): Object
 ```
 
 ### `initializeStatusObject(sourceKey, targetKey, processName)`
@@ -148,6 +150,25 @@ This is equivalent to:
 
 ```dataweave
 updateKnownFields(vars.statusObject, payload default {})
+```
+
+### `updateStatusMessage(message)`
+
+Use this when only the `message` field needs to change and the current object is already stored in `vars.statusObject`. String messages are applied directly. Object messages are serialized to JSON text before calling `updateKnownFields`.
+
+```dataweave
+%dw 2.0
+output application/json
+import updateStatusMessage from dataweave::integrationStatusUtils
+
+---
+updateStatusMessage(payload.message default "completed")
+```
+
+Explicit current-object form:
+
+```dataweave
+updateStatusMessage(vars.statusObject, { code: error.errorType as String, detail: error.description })
 ```
 
 ## Reusable Example

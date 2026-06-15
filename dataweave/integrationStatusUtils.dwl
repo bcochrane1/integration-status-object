@@ -77,6 +77,32 @@ fun updateKnownFields(current: Object, updates: Object): Object =
 fun updateKnownFields(updates: Object): Object =
   updateKnownFields(vars.statusObject, updates)
 
+/**
+ * Updates only the message field on the current integration status object.
+ *
+ * If message is a String, the value is applied as-is. If message is an Object,
+ * it is serialized to a JSON string before updating the status object. This is
+ * useful when the message starts as an error/detail object but the canonical
+ * integration status contract expects message to remain a string.
+ */
+fun updateStatusMessage(current: Object, message: Any): Object =
+  updateKnownFields(current, { message: toStatusMessageString(message) })
+
+/**
+ * Convenience overload for Mule flows where the current integration status object
+ * is stored in vars.statusObject.
+ */
+fun updateStatusMessage(message: Any): Object =
+  updateStatusMessage(vars.statusObject, message)
+
+fun toStatusMessageString(message: Any): String =
+  if (message is String)
+    message
+  else if (message is Object)
+    write(message, "application/json")
+  else
+    message as String
+
 
 /**
  * Initializes a canonical integration status object using Mule context and

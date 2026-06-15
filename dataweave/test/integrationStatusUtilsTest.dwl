@@ -91,6 +91,11 @@ var expectedResult = {
     dataUrl: "https://example.com/(relatedRecordId)"
   },
 
+  updateStatusMessage_string: "completed",
+
+  updateStatusMessage_object:
+    write({ code: "HTTP:TIMEOUT", detail: "timeout" }, "application/json"),
+
   buildStatus_basic: {
     applicationName: "example-application-papi",
     channelId: null,
@@ -206,6 +211,12 @@ var actualResult = {
   updateKnownFields_ignoresUnknownKeys:
     updateKnownFields(statusObject, { ignoredField: "do not include", unknownCount: 99 }),
 
+  updateStatusMessage_string:
+    updateStatusMessage(statusObject, "completed"),
+
+  updateStatusMessage_object:
+    updateStatusMessage(statusObject, { code: "HTTP:TIMEOUT", detail: "timeout" }),
+
   buildStatus_basic:
     buildStatus("corr-001","SUCCESS","process-order-flow","Order processed successfully.",10,0,1,null),
 
@@ -271,6 +282,12 @@ fun validate() =
       actualResult.updateKnownFields_ignoresUnknownKeys == expectedResult.updateKnownFields_ignoresUnknownKeys and
       !(keysOf(actualResult.updateKnownFields_ignoresUnknownKeys) contains "ignoredField") and
       !(keysOf(actualResult.updateKnownFields_ignoresUnknownKeys) contains "unknownCount"),
+
+    updateStatusMessage_string_valid:
+      actualResult.updateStatusMessage_string.message == expectedResult.updateStatusMessage_string,
+
+    updateStatusMessage_object_valid:
+      actualResult.updateStatusMessage_object.message == expectedResult.updateStatusMessage_object,
 
     buildStatus_basic_valid:
       actualResult.buildStatus_basic.correlationId == expectedResult.buildStatus_basic.correlationId and
