@@ -62,7 +62,7 @@ integration:
 
 Use `dataweave/integrationStatusUtils.dwl`.
 
-The two most important functions for maintaining the status object are:
+Core functions for initializing and maintaining the status object:
 
 ```dataweave
 initializeStatusObject(processName: String): Object
